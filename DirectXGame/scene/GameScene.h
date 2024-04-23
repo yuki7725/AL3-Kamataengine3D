@@ -1,13 +1,12 @@
 #pragma once
 
-#include "Audio.h"
-#include "DirectXCommon.h"
-#include "Input.h"
-#include "Model.h"
-#include "Sprite.h"
+//#include "DebugCamera.h"
+//#include "Audio.h"
+//#include "DirectXCommon.h"
+//#include "Input.h"
+//#include "Sprite.h"
 #include "ViewProjection.h"
-#include "WorldTransform.h"
-#include "DebugCamera.h"
+#include "player.h"
 
 /// <summary>
 /// ゲームシーン
@@ -41,35 +40,32 @@ public: // メンバ関数
 	void Draw();
 
 private: // メンバ変数
-	DirectXCommon* dxCommon_ = nullptr;
-	Input* input_ = nullptr;
-	Audio* audio_ = nullptr;
-	//デバッグカメラ
-	DebugCamera* debugCamera_ = nullptr;
-
-	////2D
-	////テクスチャハンドル
-	//uint32_t textureHandle_ = 0;
-	////スプライト
-	//Sprite* sprite_ = nullptr;
-
-	//3D
-	//テクスチャハンドル
-	uint32_t textureHandle_ = 0;
+	
 	//3Dモデル
 	Model* model_ = nullptr;
-	//ワールドトランスフォーム
-	WorldTransform worldTransform_;
+	//自キャラ
+	Player* player_ = nullptr;
+
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 
-	//サウンドデータハンドル
-	uint32_t soundDataHandle_ = 0;
-	//音声再生ハンドル
-	uint32_t voiceHandle_ = 0;
+
+	//DirectXCommon* dxCommon_ = nullptr;
+	//Input* input_ = nullptr;
+	//Audio* audio_ = nullptr;
+	////デバッグカメラ
+	//DebugCamera* debugCamera_ = nullptr;
+
+	
+	////テクスチャハンドル
+	//uint32_t textureHandle_ = 0;
+	////サウンドデータハンドル
+	//uint32_t soundDataHandle_ = 0;
+	////音声再生ハンドル
+	//uint32_t voiceHandle_ = 0;
 
 	//ImGuiで値を入力する変数
-	float inputFloat3[3] = {0, 0, 0};
+	//float inputFloat3[3] = {0, 0, 0};
 
 	/// <summary>
 	/// ゲームシーン用

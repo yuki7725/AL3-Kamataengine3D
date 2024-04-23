@@ -8,56 +8,62 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() { 
-	//delete sprite_;
+
+	//3Dモデルデータの解放
 	delete model_;
-	//delete debugCamera_;
+	//自キャラの解放
+	delete player_;
 }
 
 void GameScene::Initialize() {
 
-	dxCommon_ = DirectXCommon::GetInstance();
-	input_ = Input::GetInstance();
-	audio_ = Audio::GetInstance();
-	
+	//dxCommon_ = DirectXCommon::GetInstance();
+	//input_ = Input::GetInstance();
+	//audio_ = Audio::GetInstance();
 
-	////2D
 	////ファイル名を指定してテクスチャを読み込む
 	//textureHandle_ = TextureManager::Load("sample.png");
-	////スプライトの生成
-	//sprite_ = Sprite::Create(textureHandle_, {100, 50});
+	
 
-
-	//3D
-	//ファイル名を指定してテクスチャを読み込む
-	textureHandle_ = TextureManager::Load("sample.png");
 	//3Dモデルの生成
 	model_ = Model::Create();
-	//ワールドトランスフォームの初期化
-	worldTransform_.Initialize();
+
 	//ビュープロジェクションの初期化
 	viewProjection_.Initialize();
 
-	//サウンドデータの読み込み
-	soundDataHandle_ = audio_->LoadWave("fanfare.wav");
-	////音声再生
-	//audio_->PlayWave(soundDataHandle_);
-	//再生(停止)
-	voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
+	//自キャラの生成
+	player_ = new Player();
+	//自キャラの初期化
+	player_->Initialize();
 
-	//ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
-	PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
 
-	//デバッグカメラの生成
-	debugCamera_ = new DebugCamera(1280, 720);
+	////ワールドトランスフォームの初期化
+	//worldTransform_.Initialize();
 
-	//軸方向表示の表示を有効にする
-	AxisIndicator::GetInstance()->SetVisible(true);
-	//軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
-	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
+	////サウンドデータの読み込み
+	//soundDataHandle_ = audio_->LoadWave("fanfare.wav");
+	//////音声再生
+	////audio_->PlayWave(soundDataHandle_);
+	////再生(停止)
+	//voiceHandle_ = audio_->PlayWave(soundDataHandle_, true);
+
+	////ライン描画が参照するビュープロジェクションを指定する(アドレス渡し)
+	//PrimitiveDrawer::GetInstance()->SetViewProjection(&viewProjection_);
+
+	////デバッグカメラの生成
+	//debugCamera_ = new DebugCamera(1280, 720);
+
+	////軸方向表示の表示を有効にする
+	//AxisIndicator::GetInstance()->SetVisible(true);
+	////軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
+	//AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 
 }
 
 void GameScene::Update() { 
+
+	//自キャラの更新
+	player_->Update();
 
 	////2D
 	////スプライトの今の座標を取得
@@ -68,12 +74,12 @@ void GameScene::Update() {
 	////移動した座標をスプライトに反映
 	//sprite_->SetPosition(position);
 
-	//音声
-	//スペースキーを押した瞬間
-	if (input_->TriggerKey(DIK_SPACE)) {
-	//音声停止
-		audio_->StopWave(voiceHandle_);
-	}
+	////音声
+	////スペースキーを押した瞬間
+	//if (input_->TriggerKey(DIK_SPACE)) {
+	////音声停止
+	//	audio_->StopWave(voiceHandle_);
+	//}
 
 #ifdef DEBUG
 
@@ -92,49 +98,52 @@ void GameScene::Update() {
 #endif // DEBUG
 
 	//デバッグカメラの更新
-	debugCamera_->Update();
+	//debugCamera_->Update();
 
 }
 
 void GameScene::Draw() {
 
+	//自キャラの描画
+	player_->Draw();
+
 	// コマンドリストの取得
-	ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
+	//ID3D12GraphicsCommandList* commandList = dxCommon_->GetCommandList();
 
 #pragma region 背景スプライト描画
 	// 背景スプライト描画前処理
-	Sprite::PreDraw(commandList);
+	//Sprite::PreDraw(commandList);
 
 	/// <summary>
 	/// ここに背景スプライトの描画処理を追加できる
 	/// </summary>
 	
 	//ラインを描画する
-	PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, 10, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
+	//PrimitiveDrawer::GetInstance()->DrawLine3d({0, 0, 0}, {0, 10, 0}, {1.0f, 0.0f, 0.0f, 1.0f});
 
 	// スプライト描画後処理
-	Sprite::PostDraw();
+	//Sprite::PostDraw();
 	// 深度バッファクリア
-	dxCommon_->ClearDepthBuffer();
+	//dxCommon_->ClearDepthBuffer();
 #pragma endregion
 
 #pragma region 3Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
-	Model::PreDraw(commandList);
+	//Model::PreDraw(commandList);
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
 	//3D
-	model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
+	//model_->Draw(worldTransform_, debugCamera_->GetViewProjection(), textureHandle_);
 
 	// 3Dオブジェクト描画後処理
-	Model::PostDraw();
+	//Model::PostDraw();
 #pragma endregion
 
 #pragma region 前景スプライト描画
 	// 前景スプライト描画前処理
-	Sprite::PreDraw(commandList);
+	//Sprite::PreDraw(commandList);
 
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
@@ -143,7 +152,7 @@ void GameScene::Draw() {
 	//sprite_->Draw();
 
 	// スプライト描画後処理
-	Sprite::PostDraw();
+	//Sprite::PostDraw();
 
 #pragma endregion
 }
