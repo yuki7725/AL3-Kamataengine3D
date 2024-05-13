@@ -4,16 +4,46 @@
 
 GameScene::GameScene() {}
 
-GameScene::~GameScene() {}
+GameScene::~GameScene() { 
+	//delete sprite_;
+	delete model_;
+}
 
 void GameScene::Initialize() {
 
 	dxCommon_ = DirectXCommon::GetInstance();
 	input_ = Input::GetInstance();
 	audio_ = Audio::GetInstance();
+
+	////2D
+	////ファイル名を指定してテクスチャを読み込む
+	//textureHandle_ = TextureManager::Load("sample.png");
+	////スプライトの生成
+	//sprite_ = Sprite::Create(textureHandle_, {100, 50});
+
+
+	//3D
+	//ファイル名を指定してテクスチャを読み込む
+	textureHandle_ = TextureManager::Load("sample.png");
+	//3Dモデルの生成
+	model_ = Model::Create();
+	//ワールドトランスフォームの初期化
+	worldTransform_.Initialize();
+	//ビュープロジェクションの初期化
+	viewProjection_.Initialize();
 }
 
-void GameScene::Update() {}
+void GameScene::Update() { 
+
+	////2D
+	////スプライトの今の座標を取得
+	//Vector2 position = sprite_->GetPosition(); 
+	////座標を{2,1}移動
+	//position.x += 2.0f;
+	//position.y += 2.0f;
+	////移動した座標をスプライトに反映
+	//sprite_->SetPosition(position);
+}
 
 void GameScene::Draw() {
 
@@ -41,6 +71,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
 	/// </summary>
+	//3D
+	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
@@ -53,6 +85,8 @@ void GameScene::Draw() {
 	/// <summary>
 	/// ここに前景スプライトの描画処理を追加できる
 	/// </summary>
+	////2D
+	//sprite_->Draw();
 
 	// スプライト描画後処理
 	Sprite::PostDraw();
